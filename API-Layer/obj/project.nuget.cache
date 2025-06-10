@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "I6Y+y+AKmJY=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\kevjo\\OneDrive\\Dokument\\GitHub\\InFiNetCode-Hackaton2025-Team3-BE\\MVP-Planner\\API-Layer\\API-Layer.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\kevjo\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.6\\microsoft.aspnetcore.openapi.9.0.6.nupkg.sha512",
+    "C:\\Users\\kevjo\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512"
+  ],
+  "logs": []
+}
