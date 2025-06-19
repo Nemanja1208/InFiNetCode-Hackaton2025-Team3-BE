@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Infrastructure_Layer.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialIdentitySetup : Migration
+    public partial class AddDomainModels : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -48,6 +48,35 @@ namespace Infrastructure_Layer.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "IdeaSessions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_IdeaSessions", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StepTemplates",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Question = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AiPromptTemplate = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Order = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StepTemplates", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -156,6 +185,100 @@ namespace Infrastructure_Layer.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "MvpPlans",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IdeaSessionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Summary = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TargetAudience = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    KeyFeatures = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MvpPlans", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MvpPlans_IdeaSessions_IdeaSessionId",
+                        column: x => x.IdeaSessionId,
+                        principalTable: "IdeaSessions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TechRecommendations",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IdeaSessionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Technologies = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Reasoning = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TechRecommendations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TechRecommendations_IdeaSessions_IdeaSessionId",
+                        column: x => x.IdeaSessionId,
+                        principalTable: "IdeaSessions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Steps",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IdeaSessionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    StepTemplateId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserInput = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AiResponse = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Order = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Steps", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Steps_IdeaSessions_IdeaSessionId",
+                        column: x => x.IdeaSessionId,
+                        principalTable: "IdeaSessions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Steps_StepTemplates_StepTemplateId",
+                        column: x => x.StepTemplateId,
+                        principalTable: "StepTemplates",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserStories",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MvpPlanId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Priority = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserStories", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserStories_MvpPlans_MvpPlanId",
+                        column: x => x.MvpPlanId,
+                        principalTable: "MvpPlans",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -194,6 +317,31 @@ namespace Infrastructure_Layer.Data.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MvpPlans_IdeaSessionId",
+                table: "MvpPlans",
+                column: "IdeaSessionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Steps_IdeaSessionId",
+                table: "Steps",
+                column: "IdeaSessionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Steps_StepTemplateId",
+                table: "Steps",
+                column: "StepTemplateId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TechRecommendations_IdeaSessionId",
+                table: "TechRecommendations",
+                column: "IdeaSessionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserStories_MvpPlanId",
+                table: "UserStories",
+                column: "MvpPlanId");
         }
 
         /// <inheritdoc />
@@ -215,10 +363,28 @@ namespace Infrastructure_Layer.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Steps");
+
+            migrationBuilder.DropTable(
+                name: "TechRecommendations");
+
+            migrationBuilder.DropTable(
+                name: "UserStories");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "StepTemplates");
+
+            migrationBuilder.DropTable(
+                name: "MvpPlans");
+
+            migrationBuilder.DropTable(
+                name: "IdeaSessions");
         }
     }
 }
