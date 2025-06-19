@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Domain_Layer.Models; // Add this using statement
+using Domain_Layer.Models;
 
 namespace Infrastructure_Layer.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<UserModel> // Change IdentityUser to UserModel
+    public class ApplicationDbContext : IdentityDbContext<UserModel>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)

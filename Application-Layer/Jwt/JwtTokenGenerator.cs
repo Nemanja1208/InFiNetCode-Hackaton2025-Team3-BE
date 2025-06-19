@@ -26,7 +26,7 @@ namespace Application_Layer.Jwt
         public async Task<string> GenerateToken(UserModel user)
         {
             var jwtSettings = _configuration.GetSection("JwtSettings");
-            var key = Encoding.ASCII.GetBytes(jwtSettings["Secret"]!); // Using null-forgiving operator as per user's preference
+            var key = Encoding.ASCII.GetBytes(jwtSettings["Secret"]!);
 
             var claims = new List<Claim>
             {

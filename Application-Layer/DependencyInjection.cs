@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Application_Layer.Jwt;
-using Microsoft.Extensions.Configuration; // Needed for IConfiguration in JwtTokenGenerator
+using Microsoft.Extensions.Configuration;
 
 namespace Application_Layer
 {
