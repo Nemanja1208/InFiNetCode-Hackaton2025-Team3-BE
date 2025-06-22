@@ -16,5 +16,6 @@ namespace Domain_Layer.Models
         // Navigation properties
         public IdeaSession IdeaSession { get; set; }
         public StepTemplate StepTemplate { get; set; }
+        public object StepOrder { get; set; }
     }
 }

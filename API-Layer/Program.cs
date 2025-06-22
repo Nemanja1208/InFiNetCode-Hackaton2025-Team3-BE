@@ -1,12 +1,15 @@
+using Application_Layer;
+using Application_Layer.Common.Mappings;
+using Application_Layer.IdeaSessions.Queries.GetIdeaSessionById;
+using Domain_Layer.Models;
+using Infrastructure_Layer;
+using Infrastructure_Layer.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Infrastructure_Layer.Data;
-using Infrastructure_Layer;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Domain_Layer.Models;
-using Application_Layer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,7 +18,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddApplicationServices(builder.Configuration);
+builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
 
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssembly(typeof(GetIdeaSessionByIdHandler).Assembly);
+});
 builder.Services.AddIdentity<UserModel, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
