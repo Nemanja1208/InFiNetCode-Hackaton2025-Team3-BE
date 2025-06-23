@@ -3,8 +3,10 @@ using Application_Layer.Common.Mappings;
 using Application_Layer.IdeaSessions.Queries.GetIdeaSessionById;
 using Domain_Layer.Models;
 using Infrastructure_Layer;
+using Infrastructure_Layer.Auth;
 using Infrastructure_Layer.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,27 +15,32 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
+// Add services to the container
 builder.Services.AddControllers();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddApplicationServices(builder.Configuration);
+
+// AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
 
+// MediatR
 builder.Services.AddMediatR(cfg =>
 {
     cfg.RegisterServicesFromAssembly(typeof(GetIdeaSessionByIdHandler).Assembly);
 });
+
+// Identity
 builder.Services.AddIdentity<UserModel, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
-// Configure JWT Authentication
+// JWT Auth
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options =>
+})
+.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
@@ -45,23 +52,83 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = builder.Configuration["JwtSettings:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Secret"]!))
     };
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var token = context.Request.Cookies["authToken"];
+            if (!string.IsNullOrEmpty(token))
+            {
+                context.Token = token;
+            }
+            return Task.CompletedTask;
+        }
+    };
+})
+.AddGoogle(options =>
+{
+    var config = builder.Configuration;
+    options.ClientId = config["Authentication:Google:ClientId"]!;
+    options.ClientSecret = config["Authentication:Google:ClientSecret"]!;
+    options.CallbackPath = "/signin-google";
+    options.Events = new OAuthEvents
+    {
+        OnTicketReceived = async context =>
+        {
+            var handler = context.HttpContext.RequestServices.GetRequiredService<OAuthLoginHandler>();
+            await handler.HandleTicketAsync(context, "Google");
+        }
+    };
+})
+.AddGitHub(options =>
+{
+    var config = builder.Configuration;
+    options.ClientId = config["Authentication:GitHub:ClientId"]!;
+    options.ClientSecret = config["Authentication:GitHub:ClientSecret"]!;
+    options.CallbackPath = "/signin-github";
+    options.Scope.Add("user:email");
+    options.Events = new OAuthEvents
+    {
+        OnTicketReceived = async context =>
+        {
+            var handler = context.HttpContext.RequestServices.GetRequiredService<OAuthLoginHandler>();
+            await handler.HandleTicketAsync(context, "GitHub");
+        }
+    };
 });
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+
+builder.Services.AddAuthorization();
+
+// CORS
+var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>();
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy
+            .WithOrigins(allowedOrigins ?? [])
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
+
+// Swagger / OpenAPI
 builder.Services.AddOpenApi();
-builder.Services.AddSwaggerGen(); // Add this line
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.UseSwagger(); // Add this line
-    app.UseSwaggerUI(); // Add this line
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
-
+app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 
