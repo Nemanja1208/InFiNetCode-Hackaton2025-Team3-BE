@@ -6,5 +6,5 @@ public class StepDto
     public int StepTemplateId { get; set; }
     public string? UserInput { get; set; }
     public string? AiResponse { get; set; }
-    public int StepOrder { get; set; }
+    public int Order { get; set; }
 }

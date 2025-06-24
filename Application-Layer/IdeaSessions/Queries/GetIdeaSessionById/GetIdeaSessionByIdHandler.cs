@@ -34,7 +34,7 @@ public class GetIdeaSessionByIdHandler : IRequestHandler<GetIdeaSessionByIdQuery
         var steps = await _stepRepository.GetAllAsync();
         var matchingSteps = steps
             .Where(s => s.IdeaSessionId == idea.Id)
-            .OrderBy(s => s.StepOrder)
+            .OrderBy(s => s.Order)
             .ToList();
 
         idea.Steps = matchingSteps;

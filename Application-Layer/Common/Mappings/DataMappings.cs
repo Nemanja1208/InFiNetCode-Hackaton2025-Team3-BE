@@ -15,10 +15,12 @@ namespace Application_Layer.Common.Mappings
             // Idé-session med steg
             CreateMap<IdeaSession, IdeaSessionWithStepsDto>()
                 .ForMember(dest => dest.IdeaId, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.Steps, opt => opt.MapFrom(src => src.Steps.OrderBy(s => s.StepOrder)));
+                .ForMember(dest => dest.Steps, opt => opt.MapFrom(src => src.Steps.OrderBy(s => s.Order)));
 
             CreateMap<Step, StepDto>()
-                .ForMember(dest => dest.StepId, opt => opt.MapFrom(src => src.Id));
+    .ForMember(dest => dest.StepId, opt => opt.MapFrom(src => src.Id))
+    .ForMember(dest => dest.Order, opt => opt.MapFrom(src => src.Order));
+
         }
     }
 }
