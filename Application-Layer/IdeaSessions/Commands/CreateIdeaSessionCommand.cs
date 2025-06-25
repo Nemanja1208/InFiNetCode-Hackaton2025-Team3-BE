@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Application_Layer.IdeaSessions.Dto;
-using System;
+
 
 namespace Application_Layer.IdeaSessions.Commands
 {

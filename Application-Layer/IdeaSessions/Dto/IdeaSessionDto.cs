@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Application_Layer.IdeaSessions.Requests.Dto
+namespace Application_Layer.IdeaSessions.Dto
 {
     public class IdeaSessionDto //retunera reslutat 
     {
