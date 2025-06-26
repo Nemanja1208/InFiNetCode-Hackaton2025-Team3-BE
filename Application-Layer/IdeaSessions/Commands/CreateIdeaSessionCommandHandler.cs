@@ -31,18 +31,24 @@ namespace Application_Layer.IdeaSessions.Commands
 
         public async Task<IdeaSessionDto> Handle(CreateIdeaSessionCommand request, CancellationToken cancellationToken)
         {
-            // Mappa command → entity
+            // 1) Mappa command → entity + metadata
             var entity = _mapper.Map<IdeaSession>(request);
             entity.Id = Guid.NewGuid();
             entity.CreatedAt = DateTime.UtcNow;
 
-            // Skapa i databasen med det interface du har
-            await _repo.CreateAsync(entity);
+            // 2)  spara i databasen
+            var created = await _repo.CreateAsync(entity); 
 
-            // Returnera DTO
+            // 3) Enkel if-sats för felhantering
+            if (!created)
+            {
+                // Du kan också returnera null och låta controllern svara BadRequest
+                throw new ApplicationException(
+                    "Det gick inte att spara din idé. Försök igen senare.");
+            }
+            
+            // 4) Allt gick bra → returnera DTO
             return _mapper.Map<IdeaSessionDto>(entity);
-
-               // Error handlare,hantering  error vid fel av user 
         }
     }
 }
