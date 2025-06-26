@@ -1,4 +1,4 @@
-﻿using Application_Layer.IdeaSessions.Queries.GetIdeaSessionById;
+using Application_Layer.IdeaSessions.Queries.GetIdeaSessionById;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -30,4 +30,34 @@ public class IdeaSessionsController : ControllerBase
 
         return result is null ? NotFound() : Ok(result);
     }
+
+
+    [HttpPost]
+    public async Task<IActionResult> CreateIdeaSession([FromBody] CreateIdeaSessionDto request)
+    {
+        if (string.IsNullOrWhiteSpace(request.Title))
+            return BadRequest("Title is required.");
+
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? Guid.NewGuid().ToString(); // tillfälligt!
+
+        var user = HttpContext.User;
+        if (user.Identity?.IsAuthenticated != true)
+            return Unauthorized();
+        string? id = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userIdClaim)
+            || !Guid.TryParse(userIdClaim, out var userId))
+        {
+            return Unauthorized("Ogiltigt användar-ID i token.");
+        }
+
+        var result = await _mediator.Send(CreateIdeaSessionCommand);
+        if (result == null)
+        {
+            return BadRequest("Could not create idea session.");
+        }
+         
+    }
+
 }
