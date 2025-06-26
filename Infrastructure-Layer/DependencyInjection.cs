@@ -7,6 +7,8 @@ using Infrastructure_Layer.Repositories;
 using Application_Layer.UserAuth.Interfaces;
 using Application_Layer.Jwt;
 using Infrastructure_Layer.Auth;
+using Application_Layer.Common;
+using Infrastructure_Layer.Services;
 
 namespace Infrastructure_Layer
 {
@@ -21,6 +23,7 @@ namespace Infrastructure_Layer
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<IUserAuthRepository, UserAuthRepository>();
             services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+            services.AddScoped<IUserContextService, UserContextService>();
             services.AddScoped<OAuthLoginHandler>();
 
             return services;
