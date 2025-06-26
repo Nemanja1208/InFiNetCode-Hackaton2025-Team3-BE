@@ -41,6 +41,8 @@ namespace Application_Layer.IdeaSessions.Commands
 
             // Returnera DTO
             return _mapper.Map<IdeaSessionDto>(entity);
+
+               // Error handlare,hantering  error vid fel av user 
         }
     }
 }

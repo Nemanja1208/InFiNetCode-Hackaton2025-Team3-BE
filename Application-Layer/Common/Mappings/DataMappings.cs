@@ -18,9 +18,18 @@ namespace Application_Layer.Common.Mappings
                 .ForMember(dest => dest.Steps, opt => opt.MapFrom(src => src.Steps.OrderBy(s => s.Order)));
 
             CreateMap<Step, StepDto>()
-    .ForMember(dest => dest.StepId, opt => opt.MapFrom(src => src.Id))
-    .ForMember(dest => dest.Order, opt => opt.MapFrom(src => src.Order));
+                .ForMember(dest => dest.StepId, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Order, opt => opt.MapFrom(src => src.Order));
 
+            // Mappa från DTO till Command
+            CreateMap<CreateIdeaSessionDto, CreateIdeaSessionCommand>();
+
+            // Mappa från Command till entity
+            CreateMap<CreateIdeaSessionCommand, IdeaSession>();
+
+            // Mappa från entity till Output-DTO
+            CreateMap<IdeaSession, IdeaSessionDto>()
+            .ForMember(dest => dest.IdeaId, opt => opt.MapFrom(src => src.Id));
         }
     }
 }

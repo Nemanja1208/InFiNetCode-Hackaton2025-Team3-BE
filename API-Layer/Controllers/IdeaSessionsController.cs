@@ -30,55 +30,34 @@ public class IdeaSessionsController : ControllerBase
 
         return result is null ? NotFound() : Ok(result);
     }
-}
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using Infrastructure_Layer.Data;
-using Domain_Layer.Models;
-using Application_Layer.IdeaSessions.Requests;
 
-namespace API_Layer.Controllers
-{
-    [ApiController]
-    [Route("api/[controller]")]
-    public class IdeaSessionsController : ControllerBase
+
+    [HttpPost]
+    public async Task<IActionResult> CreateIdeaSession([FromBody] CreateIdeaSessionDto request)
     {
-        private readonly ApplicationDbContext _context;
+        if (string.IsNullOrWhiteSpace(request.Title))
+            return BadRequest("Title is required.");
 
-        public IdeaSessionsController(ApplicationDbContext context)
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? Guid.NewGuid().ToString(); // tillfälligt!
+
+        var user = HttpContext.User;
+        if (user.Identity?.IsAuthenticated != true)
+            return Unauthorized();
+        string? id = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userIdClaim)
+            || !Guid.TryParse(userIdClaim, out var userId))
         {
-            _context = context;
+            return Unauthorized("Ogiltigt användar-ID i token.");
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateIdeaSession([FromBody] CreateIdeaSessionRequest request)
+        var result = await _mediator.Send(CreateIdeaSessionCommand);
+        if (result == null)
         {
-            if (string.IsNullOrWhiteSpace(request.Title))
-                return BadRequest("Title is required.");
-
-            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? Guid.NewGuid().ToString(); // tillfälligt!
-            var ideaSession = new IdeaSession
-            {
-                Id = Guid.NewGuid(),
-                Title = request.Title,
-                UserId = Guid.Parse(userIdClaim),
-                CreatedAt = DateTime.UtcNow
-            };
-
-            _context.IdeaSessions.Add(ideaSession);
-            await _context.SaveChangesAsync();
-
-            return Ok(new
-            {
-                ideaId = ideaSession.Id,
-                title = ideaSession.Title,
-                status = "in_progress",
-                createdAt = ideaSession.CreatedAt
-            });
+            return BadRequest("Could not create idea session.");
         }
+         
     }
+
 }

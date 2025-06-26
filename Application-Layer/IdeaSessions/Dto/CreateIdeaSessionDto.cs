@@ -10,4 +10,3 @@ namespace Application_Layer.IdeaSessions.Dto //Vi Threading emot data från fron
         public string Title { get; set; }
     }
 }
-
