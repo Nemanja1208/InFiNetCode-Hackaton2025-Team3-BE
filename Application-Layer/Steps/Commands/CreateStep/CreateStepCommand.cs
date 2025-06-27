@@ -4,6 +4,6 @@ using MediatR;
 
 namespace Application_Layer.Steps.Commands.CreateStep
 {
-    public record CreateStepCommand(CreateStepDto Dto) : IRequest<OperationResult<string>>;
+    public record CreateStepCommand(CreateStepRequestDto Dto) : IRequest<OperationResult<CreateStepResponseDto>>;
 
 }

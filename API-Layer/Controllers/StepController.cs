@@ -16,9 +16,9 @@ namespace API_Layer.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateStepDto dto) =>
+        public async Task<IActionResult> Create([FromBody] CreateStepRequestDto dto) =>
             await _mediator.Send(new CreateStepCommand(dto)) is var result && result.IsSuccess
-                ? Ok(result)
+                ? Ok(result.Data)
                 : BadRequest(result);
     }
 }

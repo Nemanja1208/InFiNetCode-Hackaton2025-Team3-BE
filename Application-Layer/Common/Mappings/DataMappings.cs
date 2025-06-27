@@ -12,7 +12,8 @@ namespace Application_Layer.Common.Mappings
         {
             // Användare
             CreateMap<UserModel, UserDataDto>().ReverseMap();
-            CreateMap<Step, CreateStepDto>().ReverseMap();
+            CreateMap<Step, CreateStepRequestDto>().ReverseMap();
+            CreateMap<Step, CreateStepResponseDto>().ReverseMap();
 
             // Idé-session med steg
             CreateMap<IdeaSession, IdeaSessionWithStepsDto>()
