@@ -2,6 +2,7 @@
 using Application_Layer.IdeaSessions.DTOs;
 using AutoMapper;
 using Domain_Layer.Models;
+using Application_Layer.Steps.Dtos;
 
 namespace Application_Layer.Common.Mappings
 {
@@ -11,6 +12,8 @@ namespace Application_Layer.Common.Mappings
         {
             // Användare
             CreateMap<UserModel, UserDataDto>().ReverseMap();
+            CreateMap<Step, CreateStepRequestDto>().ReverseMap();
+            CreateMap<Step, CreateStepResponseDto>().ReverseMap();
 
             // Idé-session med steg
             CreateMap<IdeaSession, IdeaSessionWithStepsDto>()
@@ -18,8 +21,8 @@ namespace Application_Layer.Common.Mappings
                 .ForMember(dest => dest.Steps, opt => opt.MapFrom(src => src.Steps.OrderBy(s => s.Order)));
 
             CreateMap<Step, StepDto>()
-    .ForMember(dest => dest.StepId, opt => opt.MapFrom(src => src.Id))
-    .ForMember(dest => dest.Order, opt => opt.MapFrom(src => src.Order));
+                .ForMember(dest => dest.StepId, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Order, opt => opt.MapFrom(src => src.Order));
 
         }
     }

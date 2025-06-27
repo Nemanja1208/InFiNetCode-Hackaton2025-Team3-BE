@@ -100,3 +100,4 @@ ehthumbs.db
 Desktop.ini
 
 appsettings.Development.json
+/API-Layer/appsettings.Development.json
