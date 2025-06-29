@@ -8,12 +8,6 @@ using Domain_Layer.Models;
 using Application_Layer;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Infrastructure_Layer.Auth;
-using Application_Layer.IdeaSessions.Commands;
-using Application_Layer.Common.Mappings;
-using Application_Layer.Common.Interfaces;
-using Infrastructure_Layer.Repositories;
-
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -109,19 +103,9 @@ builder.Services.AddCors(options =>
     });
 });
 
-
-builder.Services.AddMediatR(cfg =>
-    cfg.RegisterServicesFromAssembly(typeof(CreateIdeaSessionCommand).Assembly));
-
-builder.Services.AddAutoMapper(typeof(IdeaSessionProfile).Assembly);
-builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-
-
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen(); // Add this line
-
-
 
 var app = builder.Build();
 

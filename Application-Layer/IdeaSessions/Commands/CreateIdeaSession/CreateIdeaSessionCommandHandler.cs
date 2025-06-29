@@ -29,7 +29,7 @@ namespace Application_Layer.IdeaSessions.Commands
             _mapper = mapper;
         }
 
-        public async Task<IdeaSessionDto> Handle(CreateIdeaSessionCommand request, CancellationToken cancellationToken)
+        public async Task<IdeaSessionDto> Handle(CreateIdeaSessionCommand request, bool created, CancellationToken cancellationToken)
         {
             // 1) Mappa command → entity + metadata
             var entity = _mapper.Map<IdeaSession>(request);
@@ -37,7 +37,7 @@ namespace Application_Layer.IdeaSessions.Commands
             entity.CreatedAt = DateTime.UtcNow;
 
             // 2)  spara i databasen
-            var created = await _repo.CreateAsync(entity); 
+            await _repo.CreateAsync(entity);
 
             // 3) Enkel if-sats för felhantering
             if (!created)
@@ -49,6 +49,11 @@ namespace Application_Layer.IdeaSessions.Commands
             
             // 4) Allt gick bra → returnera DTO
             return _mapper.Map<IdeaSessionDto>(entity);
+        }
+
+        public Task<IdeaSessionDto> Handle(CreateIdeaSessionCommand request, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
         }
     }
 }

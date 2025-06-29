@@ -7,7 +7,9 @@ namespace Application_Layer.IdeaSessions.Dto
 {
     public class IdeaSessionDto //retunera reslutat 
     {
-    public Guid IdeaId { get; set; }
+        public object Id;
+
+        public Guid IdeaId { get; set; }
     public string Title { get; set; }
     public DateTime CreatedAt { get; set; }
     }
