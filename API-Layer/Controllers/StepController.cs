@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace API_Layer.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class StepController : ControllerBase
     {
         private readonly IMediator _mediator;
