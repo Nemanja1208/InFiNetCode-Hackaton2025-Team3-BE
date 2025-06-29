@@ -5,7 +5,7 @@ using System.Security.Claims;
 namespace API_Layer.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class AuthController : Controller
     {
         [HttpGet("login-google")]
