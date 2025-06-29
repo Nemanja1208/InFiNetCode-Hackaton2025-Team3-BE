@@ -2,6 +2,8 @@
 using Application_Layer.IdeaSessions.DTOs;
 using AutoMapper;
 using Domain_Layer.Models;
+using Application_Layer.IdeaSessions.Dto;
+using Application_Layer.IdeaSessions.Commands;
 
 namespace Application_Layer.Common.Mappings
 {
