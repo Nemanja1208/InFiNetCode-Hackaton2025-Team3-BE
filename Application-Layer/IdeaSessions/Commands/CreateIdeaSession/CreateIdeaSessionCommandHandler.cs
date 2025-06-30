@@ -46,7 +46,7 @@ namespace Application_Layer.IdeaSessions.Commands
                 throw new ApplicationException(
                     "Det gick inte att spara din idé. Försök igen senare.");
             }
-            
+
             // 4) Allt gick bra → returnera DTO
             return _mapper.Map<IdeaSessionDto>(entity);
         }
@@ -55,5 +55,6 @@ namespace Application_Layer.IdeaSessions.Commands
         {
             throw new NotImplementedException();
         }
+        
     }
 }

@@ -1,3 +1,4 @@
+using Application_Layer.IdeaSessions.Commands;
 using Application_Layer.IdeaSessions.Dto;
 using Application_Layer.IdeaSessions.Queries.GetIdeaSessionById;
 using MediatR;
@@ -9,7 +10,7 @@ namespace API_Layer.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-//[Authorize]
+[Authorize]
 public class IdeaSessionsController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -34,7 +35,6 @@ public class IdeaSessionsController : ControllerBase
 
 
     [HttpPost]
-    [AllowAnonymous]
     public async Task<IActionResult> CreateIdeaSession([FromBody] CreateIdeaSessionDto request)
     {
         // 1) Enkel validering
@@ -50,10 +50,11 @@ public class IdeaSessionsController : ControllerBase
         }
 
         // 3) Skapa kommandot med exakt de parametrar som finns 
-        //    (ingen Description här, och konstruktor-signaturen tar Title, UserId)
+        //    (inkluderar Description, och konstruktor-signaturen tar Title, UserId, Description)
         var command = new CreateIdeaSessionCommand(
             request.Title,
-            userId
+            userId,
+            request.Description
         );
 
         // 4) Skicka till MediatR
@@ -71,16 +72,4 @@ public class IdeaSessionsController : ControllerBase
         );
     }
 
-}
-
-internal class CreateIdeaSessionCommand : IRequest<IdeaSessionDto>
-{
-    public CreateIdeaSessionCommand(string title, Guid userId)
-    {
-        Title = title;
-        UserId = userId;
-    }
-
-    public string Title { get; }
-    public Guid UserId { get; }
 }
