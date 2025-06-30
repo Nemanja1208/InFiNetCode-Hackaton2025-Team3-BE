@@ -30,7 +30,7 @@ namespace API_Layer.Controllers
 
             string? email = user.FindFirst(ClaimTypes.Email)?.Value;
             string? name = user.FindFirst("name")?.Value;
-          //  string? id = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            string? id = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             return Ok(new
             {
