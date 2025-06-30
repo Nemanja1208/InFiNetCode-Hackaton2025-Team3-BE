@@ -9,6 +9,8 @@ namespace Application_Layer.IdeaSessions.Dto //Vi Threading emot data från fron
     {
         public string Title { get; set; }
         public object Description { get; set; }
+        public object userId { get; set; }
+        public Guid IdeaSessionId { get; set; }
     }
 }
 
