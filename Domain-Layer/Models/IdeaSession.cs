@@ -9,6 +9,8 @@ namespace Domain_Layer.Models
         public string Title { get; set; }
         public Guid UserId { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;     
+        public string Status { get; set; } = "in_progress";     
 
         // Navigation properties
         public ICollection<Step> Steps { get; set; }
