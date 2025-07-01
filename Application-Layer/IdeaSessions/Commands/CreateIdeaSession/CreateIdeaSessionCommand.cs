@@ -1,28 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Application_Layer.IdeaSessions.DTOs;
+using Domain_Layer.Models;
 using MediatR;
-using Application_Layer.IdeaSessions.Dto;
 
-
-namespace Application_Layer.IdeaSessions.Commands
+namespace Application_Layer.IdeaSessions.Commands.CreateIdeaSession
 {
-    public class CreateIdeaSessionCommand : IRequest<IdeaSessionDto>
-    {
-        public string Title { get; set; }
-        public Guid UserId { get; set; }
-        public object Description { get; set; }
-
-        public CreateIdeaSessionCommand(string title, Guid userId, object description)
-        {
-            Title = title;
-            UserId = userId;
-            Description = description;
-            
-            
-        }
-    }
+    public record CreateIdeaSessionCommand(CreateIdeaSessionDto Dto, Guid UserId) : IRequest<OperationResult<IdeaSessionDto>>;
 }
-
-

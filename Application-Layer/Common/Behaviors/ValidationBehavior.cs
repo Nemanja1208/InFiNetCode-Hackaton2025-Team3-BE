@@ -10,7 +10,7 @@ namespace Application_Layer.Common.Behaviors
 {
     public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : IRequest<TResponse>
-        where TResponse : OperationResult<string> // Assuming all command handlers return OperationResult
+        where TResponse : IOperationResult // Constraint to the new interface
     {
         private readonly IEnumerable<IValidator<TRequest>> _validators;
 
@@ -35,7 +35,16 @@ namespace Application_Layer.Common.Behaviors
 
                 if (failures.Any())
                 {
-                    return (TResponse)OperationResult<string>.Failure(failures.Select(e => e.ErrorMessage).ToArray());
+                    // Get the generic type argument of TResponse (e.g., IdeaSessionDto from OperationResult<IdeaSessionDto>)
+                    var responseDataType = typeof(TResponse).GenericTypeArguments.FirstOrDefault();
+                    if (responseDataType == null)
+                    {
+                        // Fallback if TResponse is not a generic OperationResult<T>
+                        throw new InvalidOperationException("ValidationBehavior expects TResponse to be a generic OperationResult<T>.");
+                    }
+
+                    // Use the static Failure method that creates a generic OperationResult<T>
+                    return (TResponse)OperationResult<object>.Failure(responseDataType, failures.Select(e => e.ErrorMessage).ToArray());
                 }
             }
             return await next();

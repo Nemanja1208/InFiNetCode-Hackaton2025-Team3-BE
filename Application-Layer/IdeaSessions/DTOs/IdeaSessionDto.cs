@@ -1,16 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Application_Layer.IdeaSessions.Dto
+namespace Application_Layer.IdeaSessions.DTOs
 {
-    public class IdeaSessionDto //retunera reslutat 
+    public class IdeaSessionDto
     {
-        public object Id;
-        public Guid IdeaId { get; set; }
-        public string Title { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public object IdeaSessionId { get; set; }
+        public Guid Id { get; set; }
+        public required string Title { get; set; }
+        public required string Status { get; set; }
+        public required DateTime CreatedAt { get; set; }
     }
 }
