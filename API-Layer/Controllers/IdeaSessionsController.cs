@@ -30,4 +30,6 @@ public class IdeaSessionsController : ControllerBase
 
         return result is null ? NotFound() : Ok(result);
     }
+
+    
 }

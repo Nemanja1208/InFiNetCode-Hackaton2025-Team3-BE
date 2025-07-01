@@ -6,6 +6,7 @@ public class IdeaSessionWithStepsDto
     public string Title { get; set; } = default!;
     public string Status { get; set; } = default!;
     public DateTime CreatedAt { get; set; }
+    public Guid     Id        { get; set; }
 
     public List<StepDto> Steps { get; set; } = new();
 }
