@@ -25,7 +25,6 @@ namespace Infrastructure_Layer
             services.AddScoped<IUserAuthRepository, UserAuthRepository>();
             services.AddScoped<IStepRepository, StepRepository>();
             services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
-            services.AddScoped<IUserContextService, UserContextService>();
             services.AddScoped<OAuthLoginHandler>();
 
             return services;
