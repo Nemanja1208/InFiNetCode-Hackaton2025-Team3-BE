@@ -1,5 +1,6 @@
 ﻿using Application_Layer.Steps.Commands.CreateStep;
 using Application_Layer.Steps.Dtos;
+using Application_Layer.Steps.Queries.GetStepsByIdeaSessionId;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,5 +21,13 @@ namespace API_Layer.Controllers
             await _mediator.Send(new CreateStepCommand(dto)) is var result && result.IsSuccess
                 ? Ok(result.Data)
                 : BadRequest(result);
+
+        [Authorize]
+        [HttpGet("by-ideasession/{ideaSessionId}")]
+        public async Task<IActionResult> GetStepsByIdeaSessionId(Guid ideaSessionId) =>
+            await _mediator.Send(new GetStepsByIdeaSessionIdQuery(ideaSessionId)) is var result && result.IsSuccess
+                ? Ok(result)
+                : NotFound(result);
+
     }
 }
