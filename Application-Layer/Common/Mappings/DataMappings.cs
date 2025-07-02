@@ -3,6 +3,7 @@ using Application_Layer.IdeaSessions.DTOs;
 using AutoMapper;
 using Domain_Layer.Models;
 using Application_Layer.Steps.Dtos;
+using Application_Layer.StepTemplates.Dtos;
 
 namespace Application_Layer.Common.Mappings
 {
@@ -14,6 +15,8 @@ namespace Application_Layer.Common.Mappings
             CreateMap<UserModel, UserDataDto>().ReverseMap();
             CreateMap<Step, CreateStepRequestDto>().ReverseMap();
             CreateMap<Step, CreateStepResponseDto>().ReverseMap();
+            CreateMap<StepTemplate, StepTemplateDto>().ReverseMap();
+            CreateMap<StepTemplate, CreateStepTemplateDto>().ReverseMap();   
             CreateMap<Step, StepResponseDto>().ReverseMap();
 
             // IdeaSession with Steps mapping
