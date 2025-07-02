@@ -22,7 +22,11 @@ namespace Application_Layer.StepTemplates.Queries.GetAllStepTemplates
         public async Task<OperationResult<List<StepTemplateDto>>> Handle(GetAllStepTemplatesQuery request, CancellationToken cancellationToken)
         {
             var stepTemplates = await _stepTemplateRepository.GetAllAsync();
-            var stepTemplateDtos = _mapper.Map<List<StepTemplateDto>>(stepTemplates);
+
+            var stepTemplateDtos = _mapper.Map<List<StepTemplateDto>>(stepTemplates)
+                                          .OrderBy(dto => dto.Order)
+                                          .ToList();
+
             return OperationResult<List<StepTemplateDto>>.Success(stepTemplateDtos);
         }
     }
