@@ -4,7 +4,7 @@ using AutoMapper;
 using Domain_Layer.Models;
 using MediatR;
 
-namespace Application_Layer.StepTemplates.Commands
+namespace Application_Layer.StepTemplates.Commands.CreateStepTemplate
 {
     public class CreateStepTemplateCommandHandler : IRequestHandler<CreateStepTemplateCommand, OperationResult<StepTemplateDto>>
     {

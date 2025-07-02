@@ -1,7 +1,8 @@
-﻿using Application_Layer.StepTemplates.Commands;
-using Application_Layer.StepTemplates.Dtos;
+﻿using Application_Layer.StepTemplates.Dtos;
 using Application_Layer.StepTemplates.Queries.GetAllStepTemplates;
 using Application_Layer.StepTemplates.Queries.GetStepTemplateById;
+using Application_Layer.StepTemplates.Commands.CreateStepTemplate;
+using Application_Layer.StepTemplates.Commands.UpdateStepTemplate;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,5 +31,11 @@ namespace API_Layer.Controllers
            await _mediator.Send(new CreateStepTemplateCommand(dto)) is var result && result.IsSuccess
                ? Ok(result)
                : BadRequest(result);
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(Guid id, [FromBody] StepTemplateDto dto) =>
+            await _mediator.Send(new UpdateStepTemplateCommand(id, dto)) is var result && result.IsSuccess
+                ? Ok(result)
+                : BadRequest(result);
     }
 }
