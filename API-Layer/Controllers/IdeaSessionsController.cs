@@ -21,7 +21,7 @@ public class IdeaSessionsController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("GetIdeaSessionById/{id}")]
     public async Task<IActionResult> GetById(Guid id)
     {
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -66,7 +66,7 @@ public class IdeaSessionsController : ControllerBase
         }
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("UpdateIdeaSessionById/{id}")]
     public async Task<IActionResult> UpdateTitle(Guid id, [FromBody] UpdateIdeaSessionTitleCommand command)
     {
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;

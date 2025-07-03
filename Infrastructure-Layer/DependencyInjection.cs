@@ -7,9 +7,9 @@ using Infrastructure_Layer.Repositories;
 using Application_Layer.UserAuth.Interfaces;
 using Application_Layer.Jwt;
 using Infrastructure_Layer.Auth;
+using Application_Layer.Steps.Interfaces;
 using Application_Layer.Common;
 using Infrastructure_Layer.Services;
-using Application_Layer.Steps.Interfaces;
 
 namespace Infrastructure_Layer
 {
