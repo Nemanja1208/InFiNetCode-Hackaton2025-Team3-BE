@@ -8,12 +8,16 @@ namespace Application_Layer.IdeaSessions.Commands.CreateIdeaSession
 {
     public class CreateIdeaSessionCommandHandler : IRequestHandler<CreateIdeaSessionCommand, OperationResult<IdeaSessionDto>>
     {
-        private readonly IGenericRepository<IdeaSession> _repo;
+        private readonly IGenericRepository<IdeaSession> _ideaSessionRepository;
+        private readonly IGenericRepository<MvpPlan> _mvpPlanRepository;
         private readonly IMapper _mapper;
 
-        public CreateIdeaSessionCommandHandler(IGenericRepository<IdeaSession> repo, IMapper mapper)
+        public CreateIdeaSessionCommandHandler(IGenericRepository<IdeaSession> ideaSessionRepository, 
+                                               IGenericRepository<MvpPlan> mvpPlanRepository, 
+                                               IMapper mapper)
         {
-            _repo = repo;
+            _ideaSessionRepository = ideaSessionRepository;
+            _mvpPlanRepository = mvpPlanRepository;
             _mapper = mapper;
         }
 
@@ -23,6 +27,7 @@ namespace Application_Layer.IdeaSessions.Commands.CreateIdeaSession
             {
                 // 1) Map DTO from command to entity
                 var ideaSession = _mapper.Map<IdeaSession>(request.Dto);
+                var mvpPlan = _mapper.Map<MvpPlan>(request.Dto);
 
                 // Set generated properties
                 ideaSession.Id = Guid.NewGuid();
@@ -30,8 +35,12 @@ namespace Application_Layer.IdeaSessions.Commands.CreateIdeaSession
                 // UserId is obtained from the authenticated user and passed directly to the command.
                 ideaSession.UserId = request.UserId;
 
+                mvpPlan.Id = Guid.NewGuid();
+                mvpPlan.IdeaSessionId = ideaSession.Id;
+
                 // 2) Save to database
-                await _repo.CreateAsync(ideaSession);
+                await _ideaSessionRepository.CreateAsync(ideaSession);
+                await _mvpPlanRepository.CreateAsync(mvpPlan);
 
                 // 3) Return success with mapped DTO
                 var ideaSessionDto = _mapper.Map<IdeaSessionDto>(ideaSession);
