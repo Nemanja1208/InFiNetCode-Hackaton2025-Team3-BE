@@ -10,6 +10,7 @@ using Infrastructure_Layer.Auth;
 using Application_Layer.Common;
 using Infrastructure_Layer.Services;
 using Application_Layer.Steps.Interfaces;
+using Microsoft.AspNetCore.Http; // Add this
 
 namespace Infrastructure_Layer
 {
@@ -27,6 +28,8 @@ namespace Infrastructure_Layer
             services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
             services.AddScoped<IUserContextService, UserContextService>();
             services.AddScoped<OAuthLoginHandler>();
+            services.AddHttpClient<IAiMvpPlannerService, AiMvpPlannerService>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>(); // Add this
 
             return services;
         }

@@ -4,7 +4,9 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Application_Layer.IdeaSessions.Commands.CreateIdeaSession;
+using Application_Layer.IdeaSessions.Commands.GenerateMvpRecommendations; // Add this
 using Application_Layer.IdeaSessions.DTOs;
+using Application_Layer.Steps.Dtos;
 using System.Security.Claims;
 
 namespace API_Layer.Controllers;
@@ -66,6 +68,28 @@ public class IdeaSessionsController : ControllerBase
         }
     }
 
+    [HttpPost("{id}/generate-recommendations")]
+    public async Task<IActionResult> GenerateMvpRecommendations(Guid id)
+    {
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out var userId))
+        {
+            return Unauthorized("Invalid user ID in token.");
+        }
+
+        var command = new GenerateMvpRecommendationsCommand(id, userId);
+        var result = await _mediator.Send(command);
+
+        if (result.IsSuccess)
+        {
+            return Ok(result.Data);
+        }
+        else
+        {
+            return BadRequest(result.Errors);
+        }
+    }
+
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateTitle(Guid id, [FromBody] UpdateIdeaSessionTitleCommand command)
     {
@@ -90,6 +114,87 @@ public class IdeaSessionsController : ControllerBase
             title = result.Title,
             status = result.Status,
             createdAt = result.CreatedAt
+        });
+    }
+
+    [HttpGet("{id}/next-question")]
+    public async Task<IActionResult> GetNextQuestion(Guid id)
+    {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out var userId))
+            return Unauthorized();
+
+        // Get all steps for this IdeaSession
+        var stepsQuery = new Application_Layer.Steps.Queries.GetStepsByIdeaSessionId.GetStepsByIdeaSessionIdQuery(id);
+        var stepsResult = await _mediator.Send(stepsQuery);
+
+        if (!stepsResult.IsSuccess)
+            return BadRequest(stepsResult.Errors);
+
+        // Debug: Log all steps to see what we're getting
+        var allSteps = stepsResult.Data ?? new List<StepResponseDto>();
+
+        // Find the first step without UserInput (ordered by Order)
+        var nextStep = allSteps
+            .Where(s => string.IsNullOrWhiteSpace(s.UserInput))
+            .OrderBy(s => s.Order)
+            .FirstOrDefault();
+
+        if (nextStep == null)
+            return Ok(new
+            {
+                message = "All questions have been answered",
+                allCompleted = true,
+                debug_totalSteps = allSteps.Count,
+                debug_answeredSteps = allSteps.Count(s => !string.IsNullOrWhiteSpace(s.UserInput))
+            });
+
+        // Get the StepTemplate to include the actual question
+        var stepTemplateQuery = new Application_Layer.StepTemplates.Queries.GetStepTemplateById.GetStepTemplateByIdQuery(nextStep.StepTemplateId);
+        var stepTemplateResult = await _mediator.Send(stepTemplateQuery);
+
+        var question = stepTemplateResult?.Data?.Question ?? "Question not found";
+        var title = stepTemplateResult?.Data?.Title ?? "Unknown";
+
+        return Ok(new
+        {
+            stepId = nextStep.Id,
+            stepTemplateId = nextStep.StepTemplateId,
+            order = nextStep.Order,
+            title = title,
+            question = question,
+            allCompleted = false,
+            debug_totalSteps = allSteps.Count,
+            debug_answeredSteps = allSteps.Count(s => !string.IsNullOrWhiteSpace(s.UserInput)),
+            debug_nextStepUserInput = nextStep.UserInput ?? "NULL"
+        });
+    }
+
+    [HttpGet("{id}/progress")]
+    public async Task<IActionResult> GetProgress(Guid id)
+    {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out var userId))
+            return Unauthorized();
+
+        // Get all steps for this IdeaSession
+        var stepsQuery = new Application_Layer.Steps.Queries.GetStepsByIdeaSessionId.GetStepsByIdeaSessionIdQuery(id);
+        var stepsResult = await _mediator.Send(stepsQuery);
+
+        if (!stepsResult.IsSuccess)
+            return BadRequest(stepsResult.Errors);
+
+        var steps = stepsResult.Data ?? new List<StepResponseDto>();
+        var totalQuestions = steps.Count;
+        var answeredQuestions = steps.Count(s => !string.IsNullOrWhiteSpace(s.UserInput));
+
+        return Ok(new
+        {
+            totalQuestions,
+            answeredQuestions,
+            remainingQuestions = totalQuestions - answeredQuestions,
+            progressPercentage = totalQuestions > 0 ? (answeredQuestions * 100) / totalQuestions : 0,
+            isCompleted = answeredQuestions == totalQuestions && totalQuestions > 0
         });
     }
 }
