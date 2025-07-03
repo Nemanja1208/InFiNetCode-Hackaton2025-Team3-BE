@@ -37,6 +37,8 @@ namespace Application_Layer.Common.Mappings
                 .ForMember(dest => dest.MvpPlans, opt => opt.Ignore()) // MvpPlans are not part of creation DTO
                 .ForMember(dest => dest.TechRecommendations, opt => opt.Ignore()); // TechRecommendations are not part of creation DTO
 
+            CreateMap<CreateIdeaSessionDto, MvpPlan>();
+
             // Map from IdeaSession entity to IdeaSessionDto (Output DTO)
             CreateMap<IdeaSession, IdeaSessionDto>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id)); // Map Id to Id

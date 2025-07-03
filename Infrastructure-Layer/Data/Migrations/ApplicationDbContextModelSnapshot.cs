@@ -31,7 +31,15 @@ namespace Infrastructure_Layer.Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Purpose")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TargetAudience")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -59,6 +67,13 @@ namespace Infrastructure_Layer.Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("ExperienceLevel")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Goal")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid>("IdeaSessionId")
                         .HasColumnType("uniqueidentifier");
 
@@ -67,10 +82,9 @@ namespace Infrastructure_Layer.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Summary")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("TargetAudience")
+                    b.Property<string>("TimeEstimate")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
