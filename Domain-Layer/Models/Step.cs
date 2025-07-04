@@ -8,7 +8,6 @@ namespace Domain_Layer.Models
         public Guid IdeaSessionId { get; set; }
         public Guid StepTemplateId { get; set; }
         public string? UserInput { get; set; }
-        public string? AiResponse { get; set; }
         public int Order { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MVP Planner - Presentation Demo</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>MVP Planner Demo</h1>
+
+      <!-- Auth Section -->
+      <div id="auth-section" class="card">
+        <h2>Step 1: Authenticate</h2>
+        <p>
+          To start, you need a JWT token. Since this is a demo, please get a
+          token by logging in through the backend (e.g., via Swagger) and paste
+          it here.
+        </p>
+        <textarea
+          id="jwt-token"
+          placeholder="Paste your JWT token here..."
+        ></textarea>
+        <button id="save-token-btn">Save Token</button>
+      </div>
+
+      <!-- Create Idea Section -->
+      <div id="idea-section" class="card hidden">
+        <h2>Step 2: Create Your Idea</h2>
+        <input
+          type="text"
+          id="idea-title"
+          placeholder="Enter your brilliant idea title..."
+        />
+        <button id="create-idea-btn">Create Idea Session</button>
+      </div>
+
+      <!-- Questions Section -->
+      <div id="questions-section" class="card hidden">
+        <h2 id="question-title"></h2>
+        <p id="question-text"></p>
+        <textarea id="question-answer" placeholder="Your answer..."></textarea>
+        <button id="submit-answer-btn">Submit Answer</button>
+      </div>
+
+      <!-- Loading Section -->
+      <div id="loading-section" class="card hidden">
+        <h2>Generating your MVP Plan...</h2>
+        <p>The AI is working its magic. This might take a moment.</p>
+        <div class="loader"></div>
+      </div>
+
+      <!-- Result Section -->
+      <div id="result-section" class="card hidden">
+        <h2>Your AI-Generated MVP Plan!</h2>
+        <div id="mvp-plan"></div>
+      </div>
+
+      <!-- Completed Section -->
+      <div id="completed-section" class="card hidden">
+        <h2>All questions answered!</h2>
+        <p>Your MVP plan has been generated in the background.</p>
+        <button id="view-plan-btn">View My Plan</button>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

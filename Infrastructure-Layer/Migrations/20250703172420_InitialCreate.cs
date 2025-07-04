@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Infrastructure_Layer.Data.Migrations
+namespace Infrastructure_Layer.Migrations
 {
     /// <inheritdoc />
-    public partial class AddDomainModels : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -30,6 +30,8 @@ namespace Infrastructure_Layer.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Provider = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ProviderId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -57,7 +59,9 @@ namespace Infrastructure_Layer.Data.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -191,9 +195,25 @@ namespace Infrastructure_Layer.Data.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     IdeaSessionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Summary = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TargetAudience = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Summary = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Goal = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TimeEstimate = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ExperienceLevel = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     KeyFeatures = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ProblemStatement = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SolutionApproach = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ValueProposition = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PrimaryTargetAudience = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SecondaryTargetAudience = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CoreFeatures = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TechnicalStack = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EstimatedBudget = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TimelineEstimate = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MonetizationStrategy = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NextSteps = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TargetAudience = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RawAiResponse = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -236,7 +256,6 @@ namespace Infrastructure_Layer.Data.Migrations
                     IdeaSessionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     StepTemplateId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserInput = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    AiResponse = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Order = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
